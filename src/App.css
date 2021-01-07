@@ -1,0 +1,35 @@
+.App {
+	text-align: center;
+}
+.searchInput {
+	border: solid #cccccc;
+}
+.weatherContainer {
+	margin: 0 auto;
+	width: 80%;
+	margin-top: 10px;
+	border: solid black;
+}
+.weatherHeader {
+	border: solid black;
+	display: flex;
+	justify-content: space-between;
+	text-align: left;
+	margin: 0 5px 0;
+}
+.feelsLike {
+	text-align: right;
+}
+.middleHeader {
+	text-align: center;
+}
+.forecast {
+	display: flex;
+	justify-content: space-evenly;
+}
+.forecastDay {
+	border: solid black;
+	min-height: 15vh;
+	min-width: 10vw;
+	margin: 5px 5px 5px 5px;
+}
