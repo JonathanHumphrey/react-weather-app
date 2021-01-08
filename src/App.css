@@ -1,3 +1,6 @@
+h1 {
+	margin-bottom: 5px;
+}
 .App {
 	text-align: center;
 }
@@ -23,13 +26,15 @@
 .middleHeader {
 	text-align: center;
 }
-.forecast {
+.weatherBody {
 	display: flex;
 	justify-content: space-evenly;
 }
-.forecastDay {
+.forecast {
 	border: solid black;
 	min-height: 15vh;
-	min-width: 10vw;
+	width: 12.5%;
 	margin: 5px 5px 5px 5px;
+}
+.forecastDay {
 }

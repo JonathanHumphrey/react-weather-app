@@ -12,14 +12,13 @@ function App() {
   const [longitude, setLongitude] = useState(0)
   const [latitude, setLatitude] = useState(0)
   const [showWeather, setShow] = useState(false)
-  const [locationTag, setLocationTag] = useState(' ')
+  const [locationTag, setLocationTag] = useState('')
   const [date, setDate] = useState(new Date())
   const [weather, setWeather] = useState([])
-  const [forecast, setForecast] = useState([])
+  const [forecast, setForecast] = useState([{}])
   const [loading, isLoading] = useState(true)
+  const [submitFlag, setSubmitFlag] = useState(false)
   
-  let weatherArr = []
-  let forecastArr = []
   useEffect(() => {
     let timer = setInterval(() => setDate(new Date()), 1000)
   })
@@ -29,35 +28,44 @@ function App() {
   const WEATHER_API_KEY = 'e2fc55d8fa20aecfaa3fb213f96df41d'
   
   useEffect(() => {
-    Geocode.fromAddress(`${searchValue}`).then(
-      response => {
-        const { lat, lng } = response.results[0].geometry.location
-        setLocationTag(response.results[0].formatted_address)
-        setLatitude(lat)
-        setLongitude(lng)
-        console.log(response.results[0])
-        isLoading(true)
-      },
-      error => {
-        console.error(error)
-      },
-      axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude={part}&appid=${WEATHER_API_KEY}&units=imperial`)
-      .then(res => {
-        isLoading(false)
-        console.log(res)
+    if (submitFlag === true) {
+      Geocode.fromAddress(`${searchValue}`).then(
+        response => {
+          const { lat, lng } = response.results[0].geometry.location
+          setLocationTag(response.results[0].formatted_address)
+          setLatitude(lat)
+          setLongitude(lng)
+          console.log(response.results[0])
+          isLoading(true)
+        },
+        error => {
+          console.error(error)
+        },
+        axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude={part}&appid=${WEATHER_API_KEY}&units=imperial`)
+        .then(res => {
+          console.log(res.data.current)
+          
+          let newArr = []
+          setWeather(res.data.current)
+          res.data.daily.map((day, i) => {
+            //console.log(day)
+            newArr.push(day)
+            //setForecast([...forecast, day])
+            console.log(newArr)
+    
+            return newArr
+          })
+          setForecast(newArr)
+          isLoading(false)
+        })
+      )
+    }
+  }, [submitFlag])
 
-        weatherArr = res.data.current
-        forecastArr = [...res.data.daily]
-       
-        console.log(weatherArr)
-        console.log(forecastArr)
-      })
-    )
-  }, [searchValue])
    const search = searchValue => {
-     setWeather(weatherArr)
-     setForecast(forecastArr)
+     setSubmitFlag(!submitFlag)
   } 
+
   return (
     <div className="App">
       <Search
@@ -66,6 +74,8 @@ function App() {
         setSearchValue={setSearchValue}
         showWeather={showWeather}
         setShow={setShow}
+        submitFlag={submitFlag}
+        setSubmitFlag={setSubmitFlag}
       />
       <div className='weatherContainer'>
         {showWeather && !loading ?
@@ -78,7 +88,7 @@ function App() {
                 <p>{date.toLocaleTimeString()}</p>
               </div>
               <div className='middleHeader'>
-                <p></p>
+                <p>{}</p>
                 <h1>{weather.temp}&#176;</h1>
                 <sub className='feelsLike'>Feels Like: {weather.feels_like}&#176;</sub>
               </div>
@@ -88,16 +98,16 @@ function App() {
               </div>
             </div>
             {/*END OF HEADER*/}
-            {forecast.map((day, i) => {
-              console.log(day[i])
-              return (
-                <Forecast 
-                  id={i}
-                  day={day}
-                />
-              )
-            })}
-            <Forecast />
+            <div className='weatherBody'>
+              {forecast?.map((day, i) => {
+                return (
+                  <Forecast
+                    i={i}
+                    forecast={forecast}
+                  />
+                )
+              })}
+            </div>
           </div>
           : <div>
             Loading...
