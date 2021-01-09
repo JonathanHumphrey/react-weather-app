@@ -7,8 +7,9 @@ export default function Search(props) {
         
     }
     const callSearchFunction = (e) => {
-        props.setSubmitFlag(true)
-        props.setShow(true)
+        e.preventDefault()
+        props.setSubmitFlag(!props.submitFlag)
+        props.setShow(!props.showWeather)
     }
 
     return (

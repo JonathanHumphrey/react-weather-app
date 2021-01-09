@@ -1,5 +1,12 @@
 h1 {
+	margin-top: 0;
 	margin-bottom: 5px;
+}
+h3 {
+	margin-bottom: 0;
+}
+p {
+	margin: 0;
 }
 .App {
 	text-align: center;
@@ -9,12 +16,14 @@ h1 {
 }
 .weatherContainer {
 	margin: 0 auto;
-	width: 80%;
+	width: 90%;
 	margin-top: 10px;
 	border: solid black;
+	box-shadow: 5px 10px 8px #5a5a5a;
 }
 .weatherHeader {
 	border: solid black;
+	border-radius: 20px;
 	display: flex;
 	justify-content: space-between;
 	text-align: left;
@@ -22,6 +31,18 @@ h1 {
 }
 .feelsLike {
 	text-align: right;
+}
+.leftHeader {
+	text-align: center;
+	width: 15%;
+	outline: solid black;
+	margin-left: 10%;
+}
+.rightHeader {
+	text-align: center;
+	width: 15%;
+	outline: solid black;
+	margin-right: 10%;
 }
 .middleHeader {
 	text-align: center;
@@ -35,6 +56,16 @@ h1 {
 	min-height: 15vh;
 	width: 12.5%;
 	margin: 5px 5px 5px 5px;
+	background-color: rgb(112, 187, 248);
+	border-radius: 25px;
 }
-.forecastDay {
+.weatherType {
+	text-align: center;
+}
+.lowOfTheDay {
+	font-size: 50%;
+	margin-top: 2px;
+	margin-bottom: 0;
+	text-align: center;
+	font-weight: 100;
 }
