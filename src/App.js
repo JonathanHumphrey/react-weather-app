@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react'
-import Forecast from './Components/Forecast'
+
 
 import axios from 'axios'
 import Geocode from 'react-geocode'
 
-import './App.css';
+import './CSS/App.css';
 import Search from './Components/Search';
+import Weather from './Components/Weather';
+import Alerts from './Components/Alerts';
 
 function App() {
   const [searchValue, setSearchValue] = useState('')
@@ -18,19 +20,19 @@ function App() {
   const [forecast, setForecast] = useState([{}])
   const [loading, isLoading] = useState(true)
   const [submitFlag, setSubmitFlag] = useState(false)
+  const [alert, setAlert] = useState()
+
   
   useEffect(() => {
     let timer = setInterval(() => setDate(new Date()), 1000)
+    
   })
 
 
   Geocode.setApiKey('AIzaSyAapCvkx_g_yRcpFcYYEVYF6fGAxSMIM3s')
   const WEATHER_API_KEY = 'e2fc55d8fa20aecfaa3fb213f96df41d'
   
-  if (searchValue !== undefined) {
-    
-  }
-
+  // useEffect that waits for the submit flag to be true, this comes from the search component and grabs the location data based on address
   useEffect(() => {
     if (submitFlag === true) {
       Geocode.fromAddress(`${searchValue}`)
@@ -40,7 +42,7 @@ function App() {
           setLocationTag(response.results[0].formatted_address)
           setLatitude((latitude) => (lat))
           setLongitude((longitude) => (lng))
-          console.log(response.results[0])
+          console.log(date.getMonth())
         },
         error => {
           console.error(error)
@@ -49,19 +51,18 @@ function App() {
     }
   }, [submitFlag])
 
+  //Seperate Use Effect that watches latitude and longitutde for their cahnges, this was done in order to assure the order of execution for the useEffect methods here
   useEffect(() => {
     if (latitude !== 0 && longitude !== 0) {
       axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude={part}&appid=${WEATHER_API_KEY}&units=imperial`)
       .then(res => {
         console.log(res.data)
-        console.log(res.data.current.weather['0'].main)
+        setAlert(res.data.alerts['0'])
         let newArr = []
         setWeather(res.data.current)
         res.data.daily.map((day, i) => {
-          //console.log(day)
           newArr.push(day)
-          //setForecast([...forecast, day])
-          console.log(newArr)
+          
   
           return newArr
         })
@@ -81,43 +82,31 @@ function App() {
         submitFlag={submitFlag}
         setSubmitFlag={setSubmitFlag}
       />
-      <div className='weatherContainer'>
-        {showWeather && !loading ?
-          <div> 
-            <h1>{locationTag}</h1>
-            <div className='weatherHeader'>
-              <div className='leftHeader'>
-                <p>{date.toLocaleDateString()}</p>
-                <p>{date.toLocaleTimeString()}</p>
-              </div>
-              <div className='middleHeader'>
-                <p className='weatherType'>{weather.weather['0'].main}</p>
-                <h1>{weather.temp.toFixed(0)}&#176;</h1>
-                <sub className='feelsLike'>Feels Like: {weather.feels_like.toFixed(0)}&#176;</sub>
-              </div>
-              <div className='rightHeader'>
-                <p>Clouds: {weather.clouds <= 1 ? "Clear" : weather.clouds}</p>
-                <p>Dew Point: {weather.dew_point}</p>
-              </div>
-            </div>
-            {/*END OF HEADER*/}
-            <h3>7-Day Forecast</h3>
-            <div className='weatherBody'>
-              {forecast?.map((day, i) => {
-                return (
-                  <Forecast
-                    i={i}
-                    forecast={forecast}
-                  />
-                )
-              })}
-            </div>
-          </div>
-          :
-          <div>
-            Loading...   
-          </div>}
-      </div>
+      {showWeather && !loading ? 
+        <Weather
+          weather={weather}
+          setWeather={setWeather}
+          forecast={forecast}
+          setForecast={setForecast}
+          date={date}
+          loading={loading}
+          isLoading={isLoading}
+          locationTag={locationTag}
+          submitFlag={submitFlag}
+        />
+      :
+      <div>
+          Loading...   
+      </div>}
+
+      {alert ? 
+        <div className='alerts'>
+          <Alerts
+            alert={alert}
+          />
+        </div>
+        :
+        null}
     </div>
   );
 }

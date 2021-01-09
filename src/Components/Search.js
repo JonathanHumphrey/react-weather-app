@@ -14,13 +14,14 @@ export default function Search(props) {
 
     return (
         <div>
+            <h1>Enter Your City Name</h1>
             <input
                 className='searchInput'
                 type="text"
                 value={props.searchValue}
                 onChange={handleSearchInputChanges}
             />
-            <input onClick={callSearchFunction} type='submit' value='SEARCH' />
+            <input className='submitBtn' onClick={callSearchFunction} type='submit' value='SEARCH' />
         </div>
     )
 }
