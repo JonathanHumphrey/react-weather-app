@@ -12,6 +12,8 @@ export default function WeatherHeader({weather, showWeather, loading, locationTa
               <div className='weatherHeader'>
                 <div className='leftHeader'>
                   <p className='dateCurrent'>{date.toLocaleDateString()}</p>
+                  <br />
+                  <br />
                   <p className='time'>{date.toLocaleTimeString()}</p>
                 </div>
                 <div className='middleHeader'>
@@ -37,16 +39,18 @@ export default function WeatherHeader({weather, showWeather, loading, locationTa
                   
                   let month = date.getMonth()
                   let day = date.getDate()
+                  if (i >= 1) {
+                    return (
+                      <Forecast
+                        i={i}
+                        forecast={forecast}
+                        date={date}
+                        day={day}
+                        month={month}
+                      />
+                    )
+                  }
                   
-                  return (
-                    <Forecast
-                      i={i}
-                      forecast={forecast}
-                      date={date}
-                      day={day}
-                      month={month}
-                    />
-                  )
                 })}
           </div>
           </div>

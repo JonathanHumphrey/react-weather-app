@@ -56,14 +56,16 @@ function App() {
     if (latitude !== 0 && longitude !== 0) {
       axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&exclude={part}&appid=${WEATHER_API_KEY}&units=imperial`)
       .then(res => {
-        console.log(res.data)
-        setAlert(res.data.alerts['0'])
+        console.log(res.data.alerts)
+        
+        if (res.data.alerts) {                  //Checks to see if the alerts exists before setting it to avoid undf
+          setAlert(res.data.alerts['0'])
+        }
+
         let newArr = []
         setWeather(res.data.current)
         res.data.daily.map((day, i) => {
           newArr.push(day)
-          
-  
           return newArr
         })
         setForecast(newArr)
@@ -95,9 +97,7 @@ function App() {
           submitFlag={submitFlag}
         />
       :
-      <div>
-          Loading...   
-      </div>}
+        null}
 
       {alert ? 
         <div className='alerts'>
@@ -112,10 +112,3 @@ function App() {
 }
 
 export default App;
-/* {forecast?.map((day) => {
-  return (
-    <div>
-      <p>{day.temp}</p>
-    </div>
-  )
-})} */
